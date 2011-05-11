@@ -21,13 +21,23 @@
     h1 .small { font-size: 0.4em; }
     h1 a { text-decoration: none }
     h2 { font-size: 1.5em; color: #7D110C; }
-    h3 { text-align: center; color: #7D110C; }
+    h3 { color: #7D110C; }
     a { color: #990000; text-decoration: underline; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px;}
     .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
+    pre { background: #000; color: #fff; padding: 15px; border:3px solid #ccc;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
+	.organization {font-weight:bold;}
+	.instructions {border: 1px solid #C8C8C8; padding: 10px; background-color:#EDEDED;}
+	.rounded {
+		-webkit-border-radius:5px;
+		-moz-border-radius:5px;
+		border-radius:5px;
+	}
+	.italic {font-style:italic;}
+	.step {background-color:#990000;color:#EBEBEB;padding:5px;}
+	.important {background-color:#DFD82E;color:#333333;border:2px solid #DF672E;padding:15px;}
   </style>
 </head>
 
@@ -43,54 +53,116 @@
         <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
     </div>
 
-    <h1><a href="http://github.com/mtheoryx/iuwpcas">iuwpcas</a>
-      <span class="small">by <a href="http://github.com/mtheoryx">mtheoryx</a></span></h1>
-
     <div class="description">
-      Wordpress plugin integrating Indiana University CAS Authentication
-    </div>
+		<h1><a href="http://github.com/mtheoryx/iuwpcas">iuwpcas</a>
+			<span class="small">by <a href="http://github.com/mtheoryx">mtheoryx</a></span>
+</h1>
+		<p class="italic">Wordpress plugin to integrate Indiana University CAS Authentication. 
+		<span class="organization">Brought to you by UITS Enterprise Web Tech Services.</span></p>
+	</div>
+<div class="content">
+	
+	<div class="info">
+		<p>This is a plugin to integrate with Indiana University's Central Authentication System (CAS).
+		The purpose is to offload the handling of users/passwords to a trusted system for authentication
+		(are they who they say they are?) purposes, while still maintaining control for authorization 
+		(what is this person allowed to see/do?) from within the backend of the WordPress admin panel. 
+		Users are added by IU network ID, with no need to worry about choosing passwords. Additionally, 
+		the maintainer of the blog now doesn't have to handle forgotten passwords or password resets. 
+		The plugin is provided for free (libre & gratis) to the IU Community (and anyone else who uses a similar CAS system) by the Indiana University UITS Enterprise Web Tech Services team.</p>
+		<h2>Dependencies</h2>
+		<p>WordPress Version 3.1.2 or Higher.
+		PHP version 5</p>
+		<h2>License</h2>
+		<p>This program is free software; you can redistribute it and/or modify
+		it under the terms of the GNU General Public License, version 2, as 
+		published by the Free Software Foundation.
 
-    <p>This is a plugin to integrate with Indiana University's Central Authentication System (CAS).
-The purpose is to offload the handling of users/passwords to a trusted system for authentication
-(are they who they say they are?) purposes, while still maintaining control for authorization 
-(what is this person allowed to see/do?) from within the backend of the WordPress admin panel. 
-Users are added by IU network ID, with no need to worry about choosing passwords. Additionally, 
-the maintainer of the blog now doesn't have to handle forgotten passwords or password resets. 
-The plugin is provided for free (libre & gratis) to the IU Community (and anyone else who uses a similar CAS system) by the Indiana University UITS Enterprise Web Tech Services team.</p><h2>Dependencies</h2>
-<p>WordPress Version 3.1.2 or Higher.
-PHP version 5</p>
-<h2>License</h2>
-<p>This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as 
-published by the Free Software Foundation.
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU General Public License for more details.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+		You should have received a copy of the GNU General Public License
+		along with this program; if not, write to the Free Software
+		Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA</p>
+	</div>
+	
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA</p>
-<h2>Authors</h2>
-<p>David Poindexter (davpoind@iupui.edu)
-<br/>
-<br/>      </p>
-<h2>Contact</h2>
-<p>David Poindexter (davpoind@iupui.edu)      </p>
+	<div class="instructions rounded">
+		<h2>Installation Instructions</h2>
+		
+		<h3 class="step">Step 1 - Install WordPress</h3>
+		<p class="detail">Ensure you have a current version of WordPress installed on your web server.</p>
+		
+		<h3 class="step">Step 2 - Plugins folder</h3>
+		<p class="detail">Navigate to your plugins folder</p>
+		<p class="code">
+			<pre>cd your_wordpress_folder/wp-content/plugins</pre>
+		</p>
+		
+		<h3 class="step">Step 3 - Download this plugin</h3>
+		<p class="detail">Download the IUWpCAS plugin from github: <a href="https://github.com/mtheoryx/iuwpcas/archives/master">Downloads</a> and unzip it into your plugins folder.</p>
+		<p class="detail">You can also use <a href="http://git-scm.com">Git</a>, if you have it installed, to clone the master repository:</p>
+		<p class="code">
+			<pre>clone git://github.com/mtheoryx/iuwpcas</pre>
+		</p>
+		
+		
+		
+		<h3 class="step">Step 4 - Activate this plugin</h3>
+		<p class="detail">You now need to activate the plugin. First, go to your admin panel in WordPress</p>
+		<p class="code">
+			<pre>http://your_domain_name/wp-admin</pre>
+		</p>
+		<p class="detail">Authenticate as an administrator of your site.</p>
+		<p class="detail">Go to the plugins panel of your site.</p>
+		<p class="detail">Click "Activate" next to the IU CAS Authentication Plugin.</p>
+		
+		<h3 class="step important">Important! <br /><br />Step 5 - Add yourself as an admin by your IU Network ID now!</h3>
+		<p class="detail">This plugin uses your IU Network ID for authentication. There will no longer be an option to log into your WordPress site with anything other than your IU Network ID.</p>
+		<p class="detail">Click "Users".</p>
+		<p class="detail">Click "Add New".</p>
+		<p class="detail">Fill in your IU Network ID in the "Username" field.</p>
+		<p class="detail">Fill in your IU email address in the "Email" field.</p>
+		<p class="detail">Optionally fill out the other fields in the form.</p>
+		<p class="detail">Choose "Administrator" in the "Role" dropdown.</p>
+		<p class="detail">Click the "Add New User" button.</p>
+		
+		<h3 class="step">Step 6 - Test</h3>
+		<p class="detail">Click "Log Out".</p>
+		<p class="detail">Navigate back to your admin panel</p>
+		<p class="code">
+			<pre>http://your_domain_name/wp-admin</pre>
+		</p>
+		<p class="detail">If requested, authenticate via IU CAS</p>
+		<p class="detail">You should now be allowed back into your WordPress admin panel.</p>
+	</div>
+	
+	<div class="author">
+		<h2>Authors</h2>
+		<p>David Poindexter (davpoind@iupui.edu)
+		<br/>
+		<br/>      </p>
+		<h2>Contact</h2>
+		<p>David Poindexter (davpoind@iupui.edu)</p>		
+	</div>
 
 
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/mtheoryx/iuwpcas/zipball/master">zip</a> or
-      <a href="http://github.com/mtheoryx/iuwpcas/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/mtheoryx/iuwpcas</pre>
-    </p>
-
+	<div class="github">
+		<h2>Download</h2>
+		<p>
+		You can download this project in either
+		<a href="http://github.com/mtheoryx/iuwpcas/zipball/master">zip</a> or
+		<a href="http://github.com/mtheoryx/iuwpcas/tarball/master">tar</a> formats.
+		</p>
+		<p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+		by running:
+		<pre>$ git clone git://github.com/mtheoryx/iuwpcas</pre>
+		</p>
+	</div>
+	
+</div>
     <div class="footer">
       get the source code on GitHub : <a href="http://github.com/mtheoryx/iuwpcas">mtheoryx/iuwpcas</a>
     </div>
