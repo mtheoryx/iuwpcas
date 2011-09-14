@@ -1,6 +1,6 @@
 <?php
 
-function iuwpcas_logout_admin() {
+function iuwpcas_logout_options() {
 	
 ?>
 
@@ -11,7 +11,7 @@ function iuwpcas_logout_admin() {
 	<form action="options.php" method="post">
 		<fieldset>CAS Logout Options
 			<?php settings_fields('iucas-options');?>
-			<h3>Logout</h3>
+			<h3>Post-logout Preferences</h3>
 			<p>When the user chooses to logout, would you like them to be logged out of just this website,
 				or to also be logged out of the Central Authentication Service (CAS)?</p>
 			<ul>

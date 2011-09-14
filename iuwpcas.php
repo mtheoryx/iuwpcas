@@ -86,8 +86,9 @@ add_filter('login_url', array('IUCASAuthentication', 'bypass_reauth'));
 * Adds an option panel to the admin backend, sets some defaults.
 */
 add_action('admin_init', 'register_options');
-add_action('register_deactivation_hook', 'unregister_options');
 add_action('register_activation_hook', 'initial_defaults');
+add_action('register_deactivation_hook', 'unregister_options');
+add_action('register_uninstall_hook', 'uninstall_options');
 
 /**
  * Checks if the plugin class has already been defined. If not, it defines it here.
@@ -99,27 +100,33 @@ if ( !class_exists('IUCASAuthentication') ) {
 	if (is_admin()) {
 		include_once('lib/iuwpcas-admin.php');
 		include_once('lib/iuwpcas-logout-options.php');
+		include_once('lib/iuwpcas-url-options.php');
 		add_action('admin_menu', 'iu_cas_admin_menu_link');
 	}
 	/**
 	* Admin Menu functions
 	*/
-	
-	
+	function uninstall_options() {
+		delete_option('logout_type');
+		delete_option('cassvc');
+	}
 	function register_options() {
 		register_setting('iucas-options', 'logout_type');
+		register_setting('iucas-options', 'cassvc');
+		add_option('logout_type', 'cas');
+		add_option('cassvc', 'IU');
 	}
 	function unregister_options() {
 		unregister_setting('iucas-options', 'logout_type');
+		unregister_setting('iucas-options', 'cassvc');
 	}
-	function initial_defaults() {
-		add_options('logout_type', 'cas');
-	}
+	function initial_defaults() {}
 	
 	function iu_cas_admin_menu_link() {
 		$icon = plugin_dir_url( __FILE__ ).'assets/img/blockiu_white.gif';
 		add_menu_page('IU CAS Settings', 'IU CAS', 'administrator', 'iu-cas-settings', 'iuwpcas_admin', $icon, 100);
-		add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', 'administrator', 'iu-cas-logout-settings', 'iuwpcas_logout_admin');
+		add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', 'administrator', 'iu-cas-logout-settings', 'iuwpcas_logout_options');
+		add_submenu_page('iu-cas-settings', 'IU CAS URL Settings', 'IU CAS URL', 'administrator', 'iu-cas-url-settings', 'iuwpcas_url_options');
 	}
 	
 	/**
@@ -149,7 +156,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 			/**
 			 * Login URL we are using for CAS authentication for users to get a CAS ticket.
 			 */
-			$cas_login = "https://cas.iu.edu/cas/login?cassvc=IU&casurl=".get_option('siteurl')."/wp-login.php";
+			$cas_login = "https://cas.iu.edu/cas/login?cassvc=".get_option('cassvc')."&casurl=".get_option('siteurl')."/wp-login.php";
 		    
 		    
 			/**
