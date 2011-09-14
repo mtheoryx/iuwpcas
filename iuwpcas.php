@@ -205,13 +205,16 @@ if ( !class_exists('IUCASAuthentication') ) {
 	    }
 	    
 	    /**
-	     * Custom logout funtion to bypass WordPress default logout and provide a custom redirect target.
+	     * Custom logout function to bypass WordPress default logout and provide a custom redirect target.
 	     * 
 	     * @todo Provide users a notification of logout, and option to log out of CAS.
 	     */
 		function logout(){
+			wp_set_current_user(0);
 			wp_clear_auth_cookie();
 			wp_redirect( get_option('siteurl') );
+			session_unset();
+			wp_redirect( 'https://cas.iu.edu/cas/logout' );
 			exit();
 		}
 		
