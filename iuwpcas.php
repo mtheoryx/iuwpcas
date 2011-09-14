@@ -82,12 +82,40 @@ add_filter('show_password_fields', array('IUCASAuthentication', 'show_password_f
 add_action('check_passwords', array('IUCASAuthentication', 'check_passwords'), 10, 3);
 add_filter('login_url', array('IUCASAuthentication', 'bypass_reauth'));
 
+/*
+* Adds an option panel to the admin backend, sets some defaults.
+*/
+add_action('admin_init', 'register_options');
+add_action('register_deactivation_hook', 'unregister_options');
+add_action('register_activation_hook', 'initial_defaults');
+
 /**
  * Checks if the plugin class has already been defined. If not, it defines it here.
  * 
  * This is to avoid class name conflicts within WordPress and plugins.
  */
 if ( !class_exists('IUCASAuthentication') ) {
+	
+	if (is_admin()) {
+		include_once('lib/iuwpcas-admin.php');
+		add_action('admin_menu', 'iu_cas_admin_menu_link');
+	}
+	/**
+	* Admin Menu functions
+	*/
+	function register_options() {
+		register_setting('iucas-options', 'logout_type');
+	}
+	function unregister_options() {
+		unregister_setting('iucas-options', 'logout_type');
+	}
+	function initial_defaults() {
+		add_options('logout_type', 'cas');
+	}
+	
+	function iu_cas_admin_menu_link() {
+		add_options_page('IU CAS Settings', 'IU WP CAS', 'administrator', 'iu-cas-settings', 'iuwpcas_admin');
+	}
 	
 	/**
 	 * Plugin class for custom authentication method.
@@ -212,9 +240,18 @@ if ( !class_exists('IUCASAuthentication') ) {
 		function logout(){
 			wp_set_current_user(0);
 			wp_clear_auth_cookie();
-			wp_redirect( get_option('siteurl') );
+			
 			session_unset();
-			wp_redirect( 'https://cas.iu.edu/cas/logout' );
+			
+			if ( checked('site', get_option('logout_type'), false) ) {
+				wp_redirect( get_option('siteurl') );
+			} else if ( checked('cas', get_option('logout_type'), false) ) {
+				wp_redirect( 'https://cas.iu.edu/cas/logout' );
+			} else {
+				//no option set yet
+				wp_redirect( get_option('siteurl') );
+			}
+			
 			exit();
 		}
 		
