@@ -98,11 +98,14 @@ if ( !class_exists('IUCASAuthentication') ) {
 	
 	if (is_admin()) {
 		include_once('lib/iuwpcas-admin.php');
+		include_once('lib/iuwpcas-logout-options.php');
 		add_action('admin_menu', 'iu_cas_admin_menu_link');
 	}
 	/**
 	* Admin Menu functions
 	*/
+	
+	
 	function register_options() {
 		register_setting('iucas-options', 'logout_type');
 	}
@@ -114,7 +117,9 @@ if ( !class_exists('IUCASAuthentication') ) {
 	}
 	
 	function iu_cas_admin_menu_link() {
-		add_options_page('IU CAS Settings', 'IU WP CAS', 'administrator', 'iu-cas-settings', 'iuwpcas_admin');
+		$icon = plugin_dir_url( __FILE__ ).'assets/img/blockiu_white.gif';
+		add_menu_page('IU CAS Settings', 'IU CAS', 'administrator', 'iu-cas-settings', 'iuwpcas_admin', $icon, 100);
+		add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', 'administrator', 'iu-cas-logout-settings', 'iuwpcas_logout_admin');
 	}
 	
 	/**
