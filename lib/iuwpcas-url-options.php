@@ -12,7 +12,7 @@ function iuwpcas_url_options() {
 		<fieldset>CAS Logout Options
 			<?php settings_fields('iucas-options');?>
 			<h3>CAS CASSVC Preferences</h3>
-			<p>What campus should be used for the CASSVC parameter? <em>eg: IU</em></p>
+			<p>What campus should be used for the CASSVC parameter? <em>(Defaults to "IU")</em></p>
 			<ul>
 				<li>
 					<label for="cassvc">IU CASSVC</label>

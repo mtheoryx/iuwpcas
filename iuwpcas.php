@@ -70,9 +70,11 @@
  */
 $cas_configured = true;
 
+$cas_lockdown = false;
 /**
  * Hooks into WordPress authentication system
  */
+add_action('init', array('IUCASAuthentication', 'lock_down_check'));
 add_action('wp_authenticate', array('IUCASAuthentication', 'authenticate'), 10, 2);
 add_action('wp_logout', array('IUCASAuthentication', 'logout'));
 add_action('lost_password', array('IUCASAuthentication', 'disable_function'));
@@ -83,12 +85,58 @@ add_action('check_passwords', array('IUCASAuthentication', 'check_passwords'), 1
 add_filter('login_url', array('IUCASAuthentication', 'bypass_reauth'));
 
 /*
-* Adds an option panel to the admin backend, sets some defaults.
+* Adds activation/deactivation options option panel to the admin backend, sets some defaults.
 */
 add_action('admin_init', 'register_options');
-add_action('register_activation_hook', 'initial_defaults');
-add_action('register_deactivation_hook', 'unregister_options');
-add_action('register_uninstall_hook', 'uninstall_options');
+function register_options() {
+	register_setting('iucas-options', 'logout_type');
+	register_setting('iucas-options', 'cassvc');
+	register_setting('iucas-options', 'lockdown');
+}
+
+register_activation_hook(__FILE__, 'initial_defaults');
+function initial_defaults() {
+	update_option('logout_type', 'cas');
+	update_option('cassvc', 'IU');
+	update_option('lockdown', 'false');
+}
+
+register_deactivation_hook(__FILE__, 'unregister_options');
+function unregister_options() {
+	unregister_setting('iucas-options', 'logout_type');
+	unregister_setting('iucas-options', 'cassvc');
+	update_option('logout_type', '');
+	update_option('cassvc', '');
+	update_option('lockdown', '');
+}
+
+register_uninstall_hook(__FILE__, 'uninstall_options');
+function uninstall_options() {
+	delete_option('logout_type');
+	delete_option('cassvc');
+	delete_option('lockdown');
+}
+
+/**
+* Admin Menu functions
+*/
+if (is_admin()) {
+	include_once('lib/iuwpcas-admin.php');
+	include_once('lib/iuwpcas-logout-options.php');
+	include_once('lib/iuwpcas-url-options.php');
+	include_once('lib/iuwpcas-lockdown-options.php');
+	add_action('admin_menu', 'iu_cas_admin_menu_link');
+}
+
+function iu_cas_admin_menu_link() {
+	$icon = plugin_dir_url( __FILE__ ).'assets/img/blockiu_white.gif';
+	add_menu_page('IU CAS Settings', 'IU CAS', 'administrator', 'iu-cas-settings', 'iuwpcas_admin', $icon, 100);
+	add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', 'administrator', 'iu-cas-logout-settings', 'iuwpcas_logout_options');
+	add_submenu_page('iu-cas-settings', 'IU CAS URL Settings', 'IU CAS URL', 'administrator', 'iu-cas-url-settings', 'iuwpcas_url_options');
+	add_submenu_page('iu-cas-settings', 'IU CAS Lockdown Settings', 'IU CAS Lockdwon', 'administrator', 'iu-cas-lockdown-settings', 'iuwpcas_lockdown_options');
+}
+
+
 
 /**
  * Checks if the plugin class has already been defined. If not, it defines it here.
@@ -97,37 +145,7 @@ add_action('register_uninstall_hook', 'uninstall_options');
  */
 if ( !class_exists('IUCASAuthentication') ) {
 	
-	if (is_admin()) {
-		include_once('lib/iuwpcas-admin.php');
-		include_once('lib/iuwpcas-logout-options.php');
-		include_once('lib/iuwpcas-url-options.php');
-		add_action('admin_menu', 'iu_cas_admin_menu_link');
-	}
-	/**
-	* Admin Menu functions
-	*/
-	function uninstall_options() {
-		delete_option('logout_type');
-		delete_option('cassvc');
-	}
-	function register_options() {
-		register_setting('iucas-options', 'logout_type');
-		register_setting('iucas-options', 'cassvc');
-		add_option('logout_type', 'cas');
-		add_option('cassvc', 'IU');
-	}
-	function unregister_options() {
-		unregister_setting('iucas-options', 'logout_type');
-		unregister_setting('iucas-options', 'cassvc');
-	}
-	function initial_defaults() {}
 	
-	function iu_cas_admin_menu_link() {
-		$icon = plugin_dir_url( __FILE__ ).'assets/img/blockiu_white.gif';
-		add_menu_page('IU CAS Settings', 'IU CAS', 'administrator', 'iu-cas-settings', 'iuwpcas_admin', $icon, 100);
-		add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', 'administrator', 'iu-cas-logout-settings', 'iuwpcas_logout_options');
-		add_submenu_page('iu-cas-settings', 'IU CAS URL Settings', 'IU CAS URL', 'administrator', 'iu-cas-url-settings', 'iuwpcas_url_options');
-	}
 	
 	/**
 	 * Plugin class for custom authentication method.
@@ -150,15 +168,84 @@ if ( !class_exists('IUCASAuthentication') ) {
 		 *
 		 * @todo Pull IU-specific variables out, and into db or config file
 		 */
+		/**
+		* Cas Lockdown options
+		*/
+		function lock_down_check() {
+			if ( get_option('lockdown') == "true" ) {
+				$cas_lockdown = true;
+				$requested_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+				// $url = preg_replace('/\?casticket.*/', '', $requested_url);
+				
+				if (self::has_cas_ticket()) {
+					return false;
+				} else {
+					self::get_cas_ticket($requested_url);
+				}
+				
+				if ($cas_response == false) {
+					die('not allowed');
+				}
+				return false;
+			}
+			return false;
+		}
+		
 		function authenticate( &$username, &$password ) {
 			global $using_cookie, $cas_configured;
+			$requested_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+			$cas_response = self::get_cas_ticket($requested_url);
+			
+			if ($cas_response !== false) {
+				$cas_user_id = $cas_response;
+			}
+		    
+			/*
+				We know they're in the IU Network.
+				Do they have an account in this wordpress blog?
+			*/
+			$wp_user = get_userdatabylogin( $cas_user_id );
+		
+			if ( !$wp_user ) { 
+				//could direct to error page, or show a notice that they aren't allowed here
+				wp_redirect( site_url() );
+			} else {
+				$wp_username = $wp_user->user_login;
+				wp_set_auth_cookie( $wp_user->ID );
+				wp_redirect( site_url('/wp-admin/') );
+				die();
+			}
+		
+		}
+		
+		function has_cas_ticket() {
+			if ( !isset($_GET['casticket']) || (empty($_GET['casticket'])) ) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
+		function get_cas_ticket($requested_url_option = false){
+			
+			if ($requested_url_option == false) {
+				$requested_url = get_option('siteurl')."/wp-login.php";
+			} else {
+				$requested_url = $requested_url_option;
+			}
+			
+			$requested_url = $requested_url_option;
 			
 			/**
 			 * Login URL we are using for CAS authentication for users to get a CAS ticket.
 			 */
-			$cas_login = "https://cas.iu.edu/cas/login?cassvc=".get_option('cassvc')."&casurl=".get_option('siteurl')."/wp-login.php";
-		    
-		    
+			if ( get_option('cassvc') ) {
+				$cassvc = get_option('cassvc');
+			} else {
+				$cassvc = "IU";
+			}
+			$cas_login = "https://cas.iu.edu/cas/login?cassvc=".$cassvc."&casurl=".$requested_url;
+			
 			/**
 			 * Check for CAS ticket set in URL parameters.
 			 * 
@@ -178,7 +265,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 			/**
 			 * URL we send users to for validation of their CAS ticket
 			 */
-			$cas_validate_url = 'https://cas.iu.edu/cas/validate?cassvc=IU&casticket='.$cas_ticket.'&casurl='.get_option('siteurl').'/wp-login.php';
+			$cas_validate_url = "https://cas.iu.edu/cas/validate?cassvc=".$cassvc."&casticket=".$cas_ticket.'&casurl='.$requested_url;
 		    
 		    /**
 		     * Response back from CAS after ticket validation.
@@ -189,35 +276,22 @@ if ( !class_exists('IUCASAuthentication') ) {
 		     */
 			$lines = file( $cas_validate_url );
 			$cas_response = rtrim( $lines[0] );
-		    
-		    /**
+			
+			/**
 		     * If ticket was valid, sets the IU Network ID sent back in CAS validation response.
 		     */
 			if ( $cas_response != "no" ) {
                 $cas_user_id = rtrim( $lines[1] );
+				return $cas_user_id;
             } else {
                 wp_redirect( $cas_login );
+				// return false;
                 exit();
             }
-		
-			/*
-				We know they're in the IU Network.
-				Do they have an account in this wordpress blog?
-			*/
-			$wp_user = get_userdatabylogin( $cas_user_id );
-		
-			if ( $cas_response == 'yes' && !$wp_user ) { 
-				wp_redirect( site_url() );
-				exit();
-			} else {
-				$wp_username = $wp_user->user_login;
-				wp_set_auth_cookie( $wp_user->ID );
-				wp_redirect( site_url('/wp-admin/') );
-				die();
-			}
-		
+			
+			return false;
 		}
-	    
+		
 	    /**
 	     * Sets random user passwords upon new account creation.
 	     * 
