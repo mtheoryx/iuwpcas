@@ -34,7 +34,7 @@
  * @copyright   2011 Indiana University
  * @link        https://github.com/mtheoryx/iuwpcas
  * @license     GPLv2 or later
- * @version     0.1.0
+ * @version     0.2.0
  * @since       File available since release 0.1.0
  */
 
