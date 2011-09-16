@@ -94,6 +94,11 @@ function register_options() {
 	register_setting('iucas-options', 'lockdown');
 }
 
+function validate_logout_input($input) {
+	// die(var_dump($input));
+	// return $input;
+}
+
 register_activation_hook(__FILE__, 'initial_defaults');
 function initial_defaults() {
 	update_option('logout_type', 'cas');
@@ -133,7 +138,7 @@ function iu_cas_admin_menu_link() {
 	add_menu_page('IU CAS Settings', 'IU CAS', 'administrator', 'iu-cas-settings', 'iuwpcas_admin', $icon, 100);
 	add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', 'administrator', 'iu-cas-logout-settings', 'iuwpcas_logout_options');
 	add_submenu_page('iu-cas-settings', 'IU CAS URL Settings', 'IU CAS URL', 'administrator', 'iu-cas-url-settings', 'iuwpcas_url_options');
-	add_submenu_page('iu-cas-settings', 'IU CAS Lockdown Settings', 'IU CAS Lockdwon', 'administrator', 'iu-cas-lockdown-settings', 'iuwpcas_lockdown_options');
+	add_submenu_page('iu-cas-settings', 'IU CAS Lockdown Settings', 'IU CAS Lockdown', 'administrator', 'iu-cas-lockdown-settings', 'iuwpcas_lockdown_options');
 }
 
 
@@ -174,8 +179,29 @@ if ( !class_exists('IUCASAuthentication') ) {
 		function lock_down_check() {
 			if ( get_option('lockdown') == "true" ) {
 				$cas_lockdown = true;
+				
+				//check for wp-admin/options.php form submission, we don't want to use this as the requested URL
+				// $options_form_target_to_avoid = '/wp-admin/options.php';
+				// if ( strpos($_SERVER['REQUEST_URI'], $options_form_target_to_avoid) !== false ) {
+				// 	// var_dump($_SERVER);
+				// 	
+				// 	//this was sent to the options.php form, don't user the $_SERVER['REQUEST_URI'] for the redirect
+				// 	$referrer_array = explode('/', $_SERVER['HTTP_REFERER']);
+				// 	$requested_page_chunk = end($referrer_array);
+				// 	
+				// 	// var_dump($_SERVER['REQUEST_URI']);
+				// 	
+				// 	$base_request_uri = preg_replace( '/options.php/', $requested_page_chunk, $_SERVER['REQUEST_URI']);
+				// 	// var_dump($base_request_uri_array);
+				// 	// var_dump($requested_array_chunk);
+				// 	
+				// 	$requested_url = 'http://'.$_SERVER['HTTP_HOST'].$base_request_uri;
+				// 	// var_dump($requested_url);
+				// } else {
+				// 	$requested_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+				// }
+				
 				$requested_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-				// $url = preg_replace('/\?casticket.*/', '', $requested_url);
 				
 				if (self::has_cas_ticket()) {
 					return false;
@@ -193,6 +219,9 @@ if ( !class_exists('IUCASAuthentication') ) {
 		
 		function authenticate( &$username, &$password ) {
 			global $using_cookie, $cas_configured;
+			
+			//check for wp-admin/options.php form submission
+			
 			$requested_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 			$cas_response = self::get_cas_ticket($requested_url);
 			
@@ -234,7 +263,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 				$requested_url = $requested_url_option;
 			}
 			
-			$requested_url = $requested_url_option;
+			// $requested_url = $requested_url_option;
 			
 			/**
 			 * Login URL we are using for CAS authentication for users to get a CAS ticket.
