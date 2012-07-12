@@ -39,7 +39,7 @@
  */
 
 /*
-    Plugin Name: IU WpCAS
+    Plugin Name: IU WpCAS (git)
     Plugin URI: https://github.com/mtheoryx/iuwpcas
     Description: This is a plugin to integrate with Indiana University's Central Authentication System (CAS).
     Author: David R Poindexter III
