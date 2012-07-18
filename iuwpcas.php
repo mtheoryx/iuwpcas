@@ -120,12 +120,16 @@ function uninstall_options() {
 /**
 * Admin Menu functions
 */
-if (is_admin()) {
+if (is_admin() || is_super_admin()) {
 	include_once('lib/iuwpcas-admin.php');
 	include_once('lib/iuwpcas-logout-options.php');
 	include_once('lib/iuwpcas-url-options.php');
 	include_once('lib/iuwpcas-lockdown-options.php');
-	add_action('admin_menu', 'iu_cas_admin_menu_link');
+	if (is_super_admin()) {
+		add_action('network_admin_menu', 'iu_cas_admin_menu_link');
+	} elseif (is_admin()) {
+		add_action('admin_menu', 'iu_cas_admin_menu_link');
+	}
 }
 
 function iu_cas_admin_menu_link() {
