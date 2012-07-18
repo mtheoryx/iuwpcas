@@ -120,21 +120,17 @@ function uninstall_options() {
 /**
 * Admin Menu functions
 */
-if (is_admin() || is_super_admin()) {
+if (is_admin()) {
 	include_once('lib/iuwpcas-admin.php');
 	include_once('lib/iuwpcas-logout-options.php');
 	include_once('lib/iuwpcas-url-options.php');
 	include_once('lib/iuwpcas-lockdown-options.php');
-	if (is_super_admin()) {
-		add_action('network_admin_menu', 'iu_cas_admin_menu_link');
-	} elseif (is_admin()) {
-		add_action('admin_menu', 'iu_cas_admin_menu_link');
-	}
+	add_action('network_admin_menu', 'iu_cas_admin_menu_link');
 }
 
 function iu_cas_admin_menu_link() {
 	$icon = plugin_dir_url( __FILE__ ).'assets/img/blockiu_white.gif';
-	add_menu_page('IU CAS Settings', 'IU CAS', 'administrator', 'iu-cas-settings', 'iuwpcas_admin', $icon, 100);
+	add_menu_page('IU CAS Settings', 'IU CAS', 'superadmin', 'iu-cas-settings', 'iuwpcas_admin', $icon, 100);
 	add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', 'administrator', 'iu-cas-logout-settings', 'iuwpcas_logout_options');
 	add_submenu_page('iu-cas-settings', 'IU CAS URL Settings', 'IU CAS URL', 'administrator', 'iu-cas-url-settings', 'iuwpcas_url_options');
 	add_submenu_page('iu-cas-settings', 'IU CAS Lockdown Settings', 'IU CAS Lockdwon', 'administrator', 'iu-cas-lockdown-settings', 'iuwpcas_lockdown_options');
