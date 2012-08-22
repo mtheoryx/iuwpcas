@@ -32,18 +32,18 @@
  * @package     IUWpCAS
  * @author      David R. Poindexter III <davpoind@iupui.edu>
  * @copyright   2011 Indiana University
- * @link        https://github.com/mtheoryx/iuwpcas
+ * @link        https://github.com/patproct/iuwpcas
  * @license     GPLv2 or later
- * @version     0.2.0
+ * @version     0.2.1
  * @since       File available since release 0.1.0
  */
 
 /*
     Plugin Name: IU WP CAS
-    Plugin URI: https://github.com/mtheoryx/iuwpcas
+    Plugin URI: https://github.com/patproct/iuwpcas
     Description: This is a plugin to integrate with Indiana University's Central Authentication System (CAS).
     Author: David R Poindexter III
-    Version: 0.1.0
+    Version: 0.2.1
     Author URI: http://davidrpoindexter.com/
     License: GPLv2 or later
 */
