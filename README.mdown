@@ -1,1 +1,13 @@
 # IU WordPress CAS
+
+This plugin allows you to use Indiana University's **CAS** authentication with your WordPress site. Installing this plugin is very simple.
+
+* Go to the [plugin page][plugin] on GitHub and click on the ZIP button to download the zip file.
+* Unzip the file once it has downloaded.
+* Using an FTP connection to your website, copy the plugin folder to `/wp-content/plugins/` in your WordPress site.
+* Log into your WP site and activate the plugin from the *Plugins* pane.
+* You may customize the plugin's options as you see fit.
+
+[ewts]: http://uits.iu.edu/page/awty "Information about Enterprise Web Technical Services"
+[davpoind]: https://github.com/mtheoryx "David Poindexter on GitHub"
+[plugin]: https://github.com/patproct/iuwpcas "IU WP CAS on GitHub"
