@@ -134,6 +134,8 @@ function iu_cas_admin_menu_link() {
 	$icon = plugin_dir_url( __FILE__ ).'assets/img/blockiu_white.gif';
 	$user_role = (is_multisite()) ? 'superadmin' : 'administrator'; // Detects whether website is using multisite and sets appropriate user role in add_menu_page add_submenu_page below
 	
+	// The final argument on add_menu_page, $position, may conflict with other plugins. If this happens, you can change it.
+	// http://codex.wordpress.org/add_menu_page
 	add_menu_page('IU CAS Settings', 'IU CAS', $user_role, 'iu-cas-settings', 'iuwpcas_admin', $icon, 101);
 	add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', $user_role, 'iu-cas-logout-settings', 'iuwpcas_logout_options');
 	add_submenu_page('iu-cas-settings', 'IU CAS URL Settings', 'IU CAS URL', $user_role, 'iu-cas-url-settings', 'iuwpcas_url_options');
