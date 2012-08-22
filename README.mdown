@@ -21,11 +21,8 @@ The purpose of this plugin is to offload the handling of users/passwords to a tr
 
 In order for this plugin to work properly, your *WordPress username but be the same as your CAS username*. This applies to all other users.
 
-![Indiana University logo][iu-logo]
-
 [cas]: http://cas.iu.edu/ "Indiana University Central Authentication Service"
 [ewts]: http://uits.iu.edu/page/awty "Information about Enterprise Web Technical Services"
 [davpoind]: https://github.com/mtheoryx "David Poindexter on GitHub"
 [plugin]: https://github.com/patproct/iuwpcas "IU WP CAS on GitHub"
 [appcode]: http://kb.iu.edu/data/alqm.html "IU Knowledge Base - For CAS, what is an application code?"
-[iu-logo]: http://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Indiana_University_logotype.svg/200px-Indiana_University_logotype.svg.png "IU Logo"
