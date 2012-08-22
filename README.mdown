@@ -1,13 +1,31 @@
 # IU WordPress CAS
 
-This plugin allows you to use Indiana University's **CAS** authentication with your WordPress site. Installing this plugin is very simple.
+This plugin allows you to use Indiana University's [Central Authentication Service][cas] (CAS) authentication with your WordPress site. Installing this plugin is very simple.
 
-* Go to the [plugin page][plugin] on GitHub and click on the ZIP button to download the zip file.
-* Unzip the file once it has downloaded.
-* Using an FTP connection to your website, copy the plugin folder to `/wp-content/plugins/` in your WordPress site.
-* Log into your WP site and activate the plugin from the *Plugins* pane.
-* You may customize the plugin's options as you see fit.
+The purpose of this plugin is to offload the handling of users/passwords to a trusted system for authentication (are they who they say they are?) purposes, while still maintaining control for authorization (what is this person allowed to see/do?) from within the backend of the WordPress admin panel. Users are added by IU network ID, with no need to worry about choosing passwords. Additionally, the maintainer of the blog now doesn't have to handle forgotten passwords or password resets. The plugin is provided for free (libre & gratis) to the IU Community (and anyone else who uses a similar CAS system) by the Indiana University UITS Enterprise Web Tech Services team.
 
+## Installation
+1. Go to the [plugin page][plugin] on GitHub and click on the ZIP button to download the zip file.
+2. Unzip the file once it has downloaded.
+3. Using an FTP connection to your website, copy the plugin folder to `/wp-content/plugins/` in your WordPress site.
+4. Log into your WP site and activate the plugin from the *Plugins* pane.
+5. You may customize the plugin's options as you see fit.
+
+## Options
+
+**CAS Logout** - Logging out will always log you out of your WordPress site. This option lets you choose whether the plugin logs you out of CAS as well.  
+**CAS URL** - The application code is set in the `cassvc` URL parameter to CAS. By default, this is set to `IU`. This should suffice for most cases. If you need to change this, there is an [IU Knowledge Base article][appcode] about this.  
+**Lockdown** - If you only want your site's content to appear to logged-in CAS users, set this to `Only CAS-Authenticated Visitors`. However, if this is to be a publicly-viewable site, it is recommended to leave this set to `Anyone can see this site`.
+
+## Notes
+
+In order for this plugin to work properly, your *WordPress username but be the same as your CAS username*. This applies to all other users.
+
+![Indiana University logo][iu-logo]
+
+[cas]: http://cas.iu.edu/ "Indiana University Central Authentication Service"
 [ewts]: http://uits.iu.edu/page/awty "Information about Enterprise Web Technical Services"
 [davpoind]: https://github.com/mtheoryx "David Poindexter on GitHub"
 [plugin]: https://github.com/patproct/iuwpcas "IU WP CAS on GitHub"
+[appcode]: http://kb.iu.edu/data/alqm.html "IU Knowledge Base - For CAS, what is an application code?"
+[iu-logo]: http://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Indiana_University_logotype.svg/200px-Indiana_University_logotype.svg.png "IU Logo"
