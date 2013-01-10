@@ -39,7 +39,7 @@
  */
 
 /*
-    Plugin Name: IU WpCAS
+    Plugin Name: IU WP CAS
     Plugin URI: https://github.com/mtheoryx/iuwpcas
     Description: This is a plugin to integrate with Indiana University's Central Authentication System (CAS).
     Author: David R Poindexter III
@@ -125,15 +125,19 @@ if (is_admin()) {
 	include_once('lib/iuwpcas-logout-options.php');
 	include_once('lib/iuwpcas-url-options.php');
 	include_once('lib/iuwpcas-lockdown-options.php');
-	add_action('admin_menu', 'iu_cas_admin_menu_link');
+	
+	$admin_menu = (is_multisite()) ? 'network_admin_menu' : 'admin_menu'; // Detects whether website is using multisite and sends appropriate argument to add_action on next line
+	add_action($admin_menu, 'iu_cas_admin_menu_link');
 }
 
 function iu_cas_admin_menu_link() {
 	$icon = plugin_dir_url( __FILE__ ).'assets/img/blockiu_white.gif';
-	add_menu_page('IU CAS Settings', 'IU CAS', 'administrator', 'iu-cas-settings', 'iuwpcas_admin', $icon, 100);
-	add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', 'administrator', 'iu-cas-logout-settings', 'iuwpcas_logout_options');
-	add_submenu_page('iu-cas-settings', 'IU CAS URL Settings', 'IU CAS URL', 'administrator', 'iu-cas-url-settings', 'iuwpcas_url_options');
-	add_submenu_page('iu-cas-settings', 'IU CAS Lockdown Settings', 'IU CAS Lockdwon', 'administrator', 'iu-cas-lockdown-settings', 'iuwpcas_lockdown_options');
+	$user_role = (is_multisite()) ? 'superadmin' : 'administrator'; // Detects whether website is using multisite and sets appropriate user role in add_menu_page add_submenu_page below
+	
+	add_menu_page('IU CAS Settings', 'IU CAS', $user_role, 'iu-cas-settings', 'iuwpcas_admin', $icon);
+	add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', $user_role, 'iu-cas-logout-settings', 'iuwpcas_logout_options');
+	add_submenu_page('iu-cas-settings', 'IU CAS URL Settings', 'IU CAS URL', $user_role, 'iu-cas-url-settings', 'iuwpcas_url_options');
+	add_submenu_page('iu-cas-settings', 'IU CAS Lockdown Settings', 'IU CAS Lockdwon', $user_role, 'iu-cas-lockdown-settings', 'iuwpcas_lockdown_options');
 }
 
 
