@@ -137,7 +137,7 @@ function iu_cas_admin_menu_link() {
 	add_menu_page('IU CAS Settings', 'IU CAS', $user_role, 'iu-cas-settings', 'iuwpcas_admin', $icon);
 	add_submenu_page('iu-cas-settings', 'IU CAS Logout Settings', 'IU CAS Logout', $user_role, 'iu-cas-logout-settings', 'iuwpcas_logout_options');
 	add_submenu_page('iu-cas-settings', 'IU CAS URL Settings', 'IU CAS URL', $user_role, 'iu-cas-url-settings', 'iuwpcas_url_options');
-	add_submenu_page('iu-cas-settings', 'IU CAS Lockdown Settings', 'IU CAS Lockdwon', $user_role, 'iu-cas-lockdown-settings', 'iuwpcas_lockdown_options');
+	add_submenu_page('iu-cas-settings', 'IU CAS Lockdown Settings', 'IU CAS Lockdown', $user_role, 'iu-cas-lockdown-settings', 'iuwpcas_lockdown_options');
 }
 
 
