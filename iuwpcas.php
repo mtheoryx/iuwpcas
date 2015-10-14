@@ -306,7 +306,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 	     * @param $pass1 string
 	     * @param $pass2 string
 	     */
-		function check_passwords( $user, $pass1, $pass2 ) {
+		function check_passwords( $user, &$pass1, &$pass2 ) {
 			$random_password = substr( md5( uniqid( microtime( ))), 0, 8 );
 			$pass1=$pass2=$random_password;
 		}
