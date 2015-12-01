@@ -307,7 +307,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 	     * @param $pass2 string
 	     */
 		function check_passwords( $user, &$pass1, &$pass2 ) {
-			$random_password = substr( md5( uniqid( microtime( ))), 0, 8 );
+			$random_password = wp_generate_password(20, true, true);
 			$pass1=$pass2=$random_password;
 		}
 		
