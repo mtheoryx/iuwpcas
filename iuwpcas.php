@@ -175,7 +175,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 		/**
 		* Cas Lockdown options
 		*/
-		function lock_down_check() {
+		public static function lock_down_check() {
 			if ( get_option('lockdown') == "true" ) {
 				$cas_lockdown = true;
 				$requested_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
@@ -195,7 +195,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 			return false;
 		}
 		
-		function authenticate( &$username, &$password ) {
+		public static function authenticate( &$username, &$password ) {
 			global $using_cookie, $cas_configured;
 			$requested_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 			$cas_response = self::get_cas_ticket($requested_url);
@@ -222,7 +222,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 		
 		}
 		
-		function has_cas_ticket() {
+		public static function has_cas_ticket() {
 			if ( !isset($_GET['casticket']) || (empty($_GET['casticket'])) ) {
 				return false;
 			} else {
@@ -230,7 +230,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 			}
 		}
 		
-		function get_cas_ticket($requested_url_option = false){
+		public static function get_cas_ticket($requested_url_option = false){
 			
 			if ($requested_url_option == false) {
 				$requested_url = get_option('siteurl')."/wp-login.php";
@@ -306,7 +306,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 	     * @param $pass1 string
 	     * @param $pass2 string
 	     */
-		function check_passwords( $user, &$pass1, &$pass2 ) {
+		public static function check_passwords( $user, &$pass1, &$pass2 ) {
 			$random_password = wp_generate_password(20, true, true);
 			$pass1=$pass2=$random_password;
 		}
@@ -317,7 +317,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 		 * @param $login_url string
 		 * @return $login_url string
 		 */
-	    function bypass_reauth( $login_url ) {
+	    public static function bypass_reauth( $login_url ) {
 			$login_url = 'https://cas.iu.edu/cas/login?cassvc=IU&casurl='.get_option('siteurl').'/wp-login.php';
 	        return $login_url;
 	    }
@@ -327,7 +327,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 	     * 
 	     * @todo Provide users a notification of logout, and option to log out of CAS.
 	     */
-		function logout(){
+		public static function logout(){
 			wp_set_current_user(0);
 			wp_clear_auth_cookie();
 			
@@ -353,14 +353,14 @@ if ( !class_exists('IUCASAuthentication') ) {
 		 * @param $show_password_fields bool
 		 * @return bool
 		 */
-	    function show_password_fields( $show_password_fields ) {
+	    public static function show_password_fields( $show_password_fields ) {
 	      return false;
 	    }
 	    
 	    /**
 	     * Utility function to disable WP behaviors.
 	     */
-	    function disable_function() {
+	    public static function disable_function() {
 	      die('Disabled');
 	    }
 	    
