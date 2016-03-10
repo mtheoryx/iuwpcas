@@ -208,7 +208,7 @@ if ( !class_exists('IUCASAuthentication') ) {
 				We know they're in the IU Network.
 				Do they have an account in this wordpress blog?
 			*/
-			$wp_user = get_userdatabylogin( $cas_user_id );
+			$wp_user = get_user_by('login', $cas_user_id);
 		
 			if ( !$wp_user ) { 
 				//could direct to error page, or show a notice that they aren't allowed here
